@@ -1,0 +1,20 @@
+#ENTORNOS DESARROLLO
+.venv/
+venv/
+env/
+
+#COMPILADOS PYTHON
+__pycache__/
+*.py[cod]
+*$py.class
+
+#CAHCE
+.pytest_cache/
+.coverage
+htmlcov/
+
+#EDITORES
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

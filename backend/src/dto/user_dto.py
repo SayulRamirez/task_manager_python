@@ -30,7 +30,7 @@ class UserCredential(BaseModel):
     )
 
 class LoginRequest(UserCredential):
-    password: str = Field(min_length=8, max_length=30)
+    password: str = Field(min_length=8, max_length=30, examples=['securet'])
 
 class RegisterUser(UserBase, LoginRequest):
     pass

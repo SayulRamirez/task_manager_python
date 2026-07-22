@@ -1,10 +1,10 @@
-from dto.user_dto import UpdateUser
+from dto.user_dto import LoginRequest, RegisterUser, UpdateUser
 from models.user import User
 
 
 class UserRepository:
     __users: list[User] = []
-    id_count = 1
+    id_count = 0
 
     def __init__(self):
         pass
@@ -39,4 +39,16 @@ class UserRepository:
                 user.update(request.model_dump(exclude_none=True))
                 return user
         return None
+    
+    def register(self, request: RegisterUser):
+        self.id_count =+ 1
+        user = User(id=self.id_count, **request.model_dump(exclude_none=True))
+        self.__users.append(user)
+        return user
+    
+    def login(self, request: LoginRequest):
+        for user in self.__users:
+            if user.email == request.email and user.password == request.password:
+                return True
+        return False
 

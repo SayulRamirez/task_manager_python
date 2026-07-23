@@ -37,14 +37,6 @@ class RegisterUser(UserBase, LoginRequest):
 
 class User(UserBase):
     id: int = Field(gt=0, examples=[4])
-    # model_config = ConfigDict(
-    #     json_schema_extra={
-    #         'id': 1,
-    #         'first_name': 'hola',
-    #         'last_name': 'hola',
-    #         'maternal_surname': 'hola',
-    #         'phone_number': 'hola',
-    #     })
 
 class UserResponse(User, UserCredential):
     pass
@@ -60,8 +52,6 @@ class UpdateUser(BaseModel):
     last_name: Optional[str] = Field(default=None, alias='lastName', min_length=1, max_length=20, examples=['Perez'])
     maternal_surname: Optional[str] = Field(default=None, alias='maternalSurname', min_length=1, max_length=20, examples=['Hernadez'])
     phone_number: Optional[str] = Field(default=None, alias='phoneNumber', min_length=10, max_length=15, examples=['37495849265'])
-
-
 
 class StatusUserRequest(BaseModel):
     id: int = Field(gt=0)
@@ -85,22 +75,3 @@ class TaskResponse(BaseModel):
     priority: Literal['LOW', 'MEDIUM', 'HIGH'] = Field()
     create_date: str = Field(alias='createDate')
     runtime: int = Field(gt=0)
-
-
-
-class ProjectRequest(BaseModel):
-    title: str = Field(min_length=3, max_length=25)
-    description: str = Field(min_length=3, max_length=100)
-    leader: str = Field(gt=0)
-    estimate_completion: str = Field()
-
-class ProjectResponse(BaseModel):
-    id: int = Field(gt=0)
-    title: str = Field(min_length=3, max_length=100)
-    description: str = Field(min_length=3, max_length=100)
-    status: Literal['COMPLETE', 'IN_PROGRESS', 'PENDING'] = Field()
-    estimated_completion: str = Field(alias='estimatedCompletion')
-
-class ChangedStatus(BaseModel):
-    id: int = Field(gt=0)
-    status: Literal['COMPLETE', 'IN_PROGRESS', 'PENDING'] = Field()

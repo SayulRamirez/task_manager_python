@@ -22,3 +22,4 @@ class Project(Base):
     status = Column(Enum(Status), default=Status.PENDING)
     estimated_completion = Column(Date, nullable=False, default=date.today)
 
+    tasks_project = relationship('Task', back_populates='project', cascade='all, delete-orphan')

@@ -1,5 +1,5 @@
 from dto.project_dto import CreateProject
-from models.project import Project
+from models.project import Project, Status
 
 from sqlalchemy.orm import Session
 
@@ -21,7 +21,7 @@ class ProjectRepository:
         self.db.flush(project)
         return project
     
-    def changed_status(self, id, status):
+    def changed_status(self, id, status: Status):
         project = self.find_by_id(id)
 
         if project:

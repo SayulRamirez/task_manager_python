@@ -29,3 +29,4 @@ class User(Base):
     role = Column(Enum(Role), default=Role.USER)
 
     projects_owners = relationship('Project', back_populates='owner')
+    tasks_owners = relationship('Task', back_populates='responsible')

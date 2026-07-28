@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -31,6 +30,6 @@ class CreateProject(ProjectBase):
 
 class ProjectResponse(ProjectBase):
     id: int = Field(gt=0, examples=[4])
-    status: Status
+    status: Status = Field(examples=['En progreso'])
 
     model_config = ConfigDict(from_attributes=True)

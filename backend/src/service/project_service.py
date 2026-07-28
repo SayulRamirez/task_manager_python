@@ -1,5 +1,4 @@
 from dto.project_dto import CreateProject
-from models.project import Project
 from repository.projec_repository import ProjectRepository
 from repository.user_repository import UserRepository
 

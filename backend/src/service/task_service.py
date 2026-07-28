@@ -11,7 +11,7 @@ class TaskService:
 
     def __init__(self):
         # self.user_repository = UserRepository()
-        self.project_repository = ProjectRepository()
+        # self.project_repository = ProjectRepository()
         self.task_repository = TaskRepository()
 
     def create_task(self, request: CreateTask):

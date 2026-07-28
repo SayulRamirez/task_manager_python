@@ -7,6 +7,7 @@ from controller.project_controller import project_controller
 from controller.task_controller import task_controller
 
 from models.user import User
+from models.project import Project
 # from starlette.routing import BaseRoute
 
 Base.metadata.create_all(bind=engine)

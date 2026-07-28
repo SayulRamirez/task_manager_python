@@ -58,20 +58,3 @@ class StatusUserRequest(BaseModel):
     status: Literal['ACTIVE', 'BLOCKED', 'DELETED'] = Field()
 
 
-class TaskRequest(BaseModel):
-    title: str = Field(min_length=3, max_length=25)
-    description: str = Field(min_length=3, max_length=100)
-    email: str = Field(min_length=5, pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$")
-    project: int = Field(gt=0)
-    estimate_delivery: str = Field(alias='estimateDelivery')
-    priority: Literal['LOW', 'MEDIUM', 'HIGH'] = Field()
-    
-class TaskResponse(BaseModel):
-    id: int = Field(gt=0)
-    title: str = Field(min_length=3, max_length=25)
-    description: str = Field(min_length=3, max_length=100)
-    status: Literal['COMPLETE', 'IN_PROGRESS', 'PENDING'] = Field()
-    estimate_delivery: str = Field(alias='estimateDelivery')
-    priority: Literal['LOW', 'MEDIUM', 'HIGH'] = Field()
-    create_date: str = Field(alias='createDate')
-    runtime: int = Field(gt=0)

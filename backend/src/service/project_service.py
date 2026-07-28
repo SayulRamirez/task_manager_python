@@ -8,7 +8,7 @@ class ProjectService:
 
     def __init__(self):
         self.project_repository = ProjectRepository()
-        self.user_repository = UserRepository()
+        # self.user_repository = UserRepository()
 
     def create_project(self, request: CreateProject):
         if not self.user_repository.find_by_id(request.leader):

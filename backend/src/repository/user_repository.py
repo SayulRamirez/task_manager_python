@@ -1,54 +1,44 @@
 from dto.user_dto import LoginRequest, RegisterUser, UpdateUser
 from models.user import User
 
+from sqlalchemy.orm import Session
 
 class UserRepository:
-    __users: list[User] = []
-    id_count = 0
+    def __init__(self, db: Session):
+        self.db = db
 
-    def __init__(self):
-        pass
-
-    # def find_by_email_and_is_active(self, email: str) -> User | None:
-    #     for user in self.__users:
-    #         if user.email == email and user.status.value == UserStatus.ACTIVE.value:
-    #             return user
-    #     return None
+    def find_by_id(self, id: int):
+        return self.db.query(User).filter(User.id == id).first()
     
     def exists_by_phone_number(self, phone_number: str) -> bool:
-        for user in self.__users:
-            if user.phone_number == phone_number:
-                return True
-        return False
+        return self.db.query(User).filter(User.phone_number == phone_number).first() is not None
     
     def find_by_email(self, email: str) -> User | None:
-        for user in self.__users:
-            if user.email == email:
-                return user
-        return None
-    
-    def find_by_id(self, id: int):
-        for user in self.__users:
-            if user.id == id:
-                return user
-        return None
+        return self.db.query(User).filter(User.email == email).first()
     
     def update(self, id: int, request: UpdateUser):
-        for user in self.__users:
-            if user.id == id:
-                user.update(request.model_dump(exclude_none=True))
-                return user
-        return None
-    
+        user = self.find_by_id(id)
+        if not user:
+            return None
+        
+        for key, value in request.model_dump(exclude_none=True).items():
+            setattr(user, key, value)
+        
+        self.db.commit()
+        self.db.refresh(user)
+
+        return user
+
     def register(self, request: RegisterUser):
-        self.id_count =+ 1
-        user = User(id=self.id_count, **request.model_dump(exclude_none=True))
-        self.__users.append(user)
+        user = User(**request.model_dump(exclude_none=True))
+        self.db.add(user)
+        self.db.commit()
+        self.db.refresh(user)
         return user
     
     def login(self, request: LoginRequest):
-        for user in self.__users:
-            if user.email == request.email and user.password == request.password:
-                return True
-        return False
-
+        user = self.db.query(User).filter(
+            User.email == request.email,
+            User.password == request.password
+        ).first
+        return user is not None

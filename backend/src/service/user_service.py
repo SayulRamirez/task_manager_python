@@ -7,18 +7,13 @@ from repository.user_repository import UserRepository
 
 class UserService:
 
-    def __init__(self):
-        self.user_repository = UserRepository()
+    def __init__(self, user_repository: UserRepository):
+        self.user_repository = user_repository
 
     def get_info(self, id: int):
         return self.user_repository.find_by_id(id)
     
-    def update_info(self, id: int, request: UpdateUser):
-        user = self.user_repository.find_by_id(id)
-
-        if not user:
-            return None
-        
+    def update_info(self, id: int, request: UpdateUser):        
         return self.user_repository.update(id, request)
     
     # def changed_status(self, id, request: Status):

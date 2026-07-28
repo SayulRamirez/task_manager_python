@@ -1,37 +1,41 @@
 from dto.project_dto import CreateProject
-from models.project import Project
+from models.project import Project, Status
 
+from sqlalchemy.orm import Session
 
 class ProjectRepository:
-    __proyects: list[Project] = []
-    __id_count = 0
 
-    def save(self, request: CreateProject):
-        self.__id_count += 1
-        self.__proyects.append(Project(id=self.__id_count,
-                                       status='PENDING',
-                                       **request.model_dump()))
+    def __init__(self, db: Session):
+        self.db = db
 
     def find_by_id(self, id):
-        for proyect in self.__proyects:
-            if proyect.id == id:
-                return proyect
-        return None
-    
+        return self.db.query(Project).filter(Project.id == id).first()
+
     def get_all(self, id_leader):
-        return [proyect for proyect in self.__proyects if proyect.leader == id_leader]
+        return self.db.query(Project).filter(Project.user_id == id_leader).all()
+    
+    def save(self, request: CreateProject) -> Project:
+        project = Project(**request.model_dump())
+        self.db.add(project)
+        self.db.commit()
+        self.db.flush(project)
+        return project
+    
+    def changed_status(self, id, status: Status):
+        project = self.find_by_id(id)
 
-    def changed_status(self, id, status):
-        proyect = self.find_by_id(id)
-
-        if proyect:
-            proyect.status = status
-            return proyect
+        if project:
+            project.status = status
+            self.db.add(project)
+            self.db.commit()
+            self.db.refresh(project)
+            return project
         return None
     
     def deleted(self, id):
-        for proyect in self.__proyects:
-            if proyect.id == id:
-                self.__proyects.remove(proyect)
-                return True
-        return False
+        project = self.find_by_id(id)
+        if not project:
+            return False
+        self.db.delete(project)
+        self.db.commit()
+        return True

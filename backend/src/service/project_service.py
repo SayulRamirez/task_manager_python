@@ -1,19 +1,17 @@
 from dto.project_dto import CreateProject
-from models.project import Project
 from repository.projec_repository import ProjectRepository
 from repository.user_repository import UserRepository
 
 
 class ProjectService:
 
-    def __init__(self):
-        self.project_repository = ProjectRepository()
-        # self.user_repository = UserRepository()
+    def __init__(self, project_repository: ProjectRepository, user_repository: UserRepository):
+        self.project_repository = project_repository
+        self.user_repository = user_repository
 
     def create_project(self, request: CreateProject):
-        if not self.user_repository.find_by_id(request.leader):
+        if not self.user_repository.find_by_id(request.user_id):
             return None
-        
         return self.project_repository.save(request)
     
     def get_project_by_id(self, id: int):

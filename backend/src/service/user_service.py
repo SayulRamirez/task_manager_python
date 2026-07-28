@@ -1,6 +1,3 @@
-from fastapi import HTTPException
-from starlette import status
-
 from dto.user_dto import UpdateUser
 from repository.user_repository import UserRepository
 

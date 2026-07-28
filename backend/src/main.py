@@ -7,11 +7,13 @@ from controller.project_controller import project_controller
 from controller.task_controller import task_controller
 
 from models.user import User
+from models.project import Project
+from models.task import Task
 # from starlette.routing import BaseRoute
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(root_path='/api/v1', )
+app = FastAPI(root_path='/api/v1')
 
 app.include_router(router=user_controller)
 app.include_router(router=auth_router)

@@ -20,4 +20,3 @@ async def update(id: int = Path(gt=0), request: UpdateUser = Body(), service: Us
     if not response:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with {id} not found")
     return response
-

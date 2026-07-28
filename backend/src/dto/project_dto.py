@@ -1,7 +1,8 @@
 from datetime import date
-from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+from models.project import Status
 
 
 class ProjectBase(BaseModel):
@@ -18,7 +19,7 @@ class ProjectBase(BaseModel):
     )
 
 class CreateProject(ProjectBase):
-    leader: int = Field(gt=0, examples=[1])
+    user_id: int = Field(gt=0, examples=[1])
 
     @field_validator('estimated_completion')
     @classmethod
@@ -29,6 +30,6 @@ class CreateProject(ProjectBase):
 
 class ProjectResponse(ProjectBase):
     id: int = Field(gt=0, examples=[4])
-    status: Literal['COMPLETE', 'IN_PROGRESS', 'PENDING'] = Field(examples=['IN_PROGRESS'])
+    status: Status = Field(examples=['En progreso'])
 
     model_config = ConfigDict(from_attributes=True)

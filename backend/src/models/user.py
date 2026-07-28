@@ -2,14 +2,15 @@
 import enum
 
 from sqlalchemy import Column, Integer, String, Enum
+from sqlalchemy.orm import relationship
 
 from config.database import Base
 
 
 class UserStatus(str, enum.Enum):
-    ACTIVE = True
-    BLOCKED = False
-    DELETED = False
+    ACTIVE = 'ACTIVE'
+    BLOCKED = 'BLOCKED'
+    DELETED = 'DELETED'
 
 class Role(str, enum.Enum):
     ADMIN = "ADMIN"
@@ -26,3 +27,6 @@ class User(Base):
     password = Column(String, nullable=False)
     status = Column(Enum(UserStatus), default=UserStatus.ACTIVE)
     role = Column(Enum(Role), default=Role.USER)
+
+    projects_owners = relationship('Project', back_populates='owner')
+    tasks_owners = relationship('Task', back_populates='responsible')

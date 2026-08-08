@@ -2,7 +2,7 @@ from datetime import date
 import enum
 
 from sqlalchemy import Column, Date, Enum, ForeignKey, Integer, String
-from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from config.database import Base
 
@@ -14,12 +14,12 @@ class Status(str, enum.Enum):
 
 class Project(Base):
     __tablename__ = 'projects'
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(20), nullable=False)
-    description = Column(String(100), nullable=False)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    owner = relationship('User', back_populates='projects_owners')
-    status = Column(Enum(Status), default=Status.PENDING)
-    estimated_completion = Column(Date, nullable=False, default=date.today)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    title: Mapped[str] = mapped_column(String(20))
+    description: Mapped[str] = mapped_column(String(100))
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    owner: Mapped['User'] = relationship(back_populates='projects_owners')
+    status: Mapped[Status] = mapped_column(default=Status.PENDING)
+    estimated_completion: Mapped[date] = mapped_column(default=date.today)
 
-    tasks_project = relationship('Task', back_populates='project', cascade='all, delete-orphan')
+    tasks_project: Mapped[list['Task']] = relationship(back_populates='project', cascade='all, delete-orphan')

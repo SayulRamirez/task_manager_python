@@ -1,3 +1,5 @@
+from sqlalchemy import exists, select
+
 from dto.user_dto import LoginRequest, RegisterUser, UpdateUser
 from models.user import User
 
@@ -8,13 +10,16 @@ class UserRepository:
         self.db = db
 
     def find_by_id(self, id: int):
-        return self.db.query(User).filter(User.id == id).first()
+        stmt = select(User).where(User.id == id)
+        return self.db.execute(stmt).scalar_one_or_none()
     
     def exists_by_phone_number(self, phone_number: str) -> bool:
-        return self.db.query(User).filter(User.phone_number == phone_number).first() is not None
+        stmt = select(exists().where(User.phone_number == phone_number))
+        return bool(self.db.execute(stmt).scalar())
     
     def find_by_email(self, email: str) -> User | None:
-        return self.db.query(User).filter(User.email == email).first()
+        stmt = select(User).where(User.email == email)
+        return self.db.execute(stmt).scalar_one_or_none()
     
     def update(self, id: int, request: UpdateUser):
         user = self.find_by_id(id)
@@ -36,9 +41,7 @@ class UserRepository:
         self.db.refresh(user)
         return user
     
-    def login(self, request: LoginRequest):
-        user = self.db.query(User).filter(
-            User.email == request.email,
-            User.password == request.password
-        ).first
-        return user is not None
+    def login(self, request: LoginRequest) -> bool:
+        stmt = select(exists().where(User.email == request.email,
+                                     User.password == request.password))
+        return bool(self.db.execute(stmt).scalar())

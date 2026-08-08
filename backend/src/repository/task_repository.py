@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from dto.task_dto import CreateTask
@@ -10,10 +11,12 @@ class TaskRepository():
         self.db = db
 
     def find_by_id(self, id):
-        return self.db.query(Task).filter(Task.id == id).first()
+        stmt = select(Task).where(Task.id == id)
+        return self.db.execute(stmt).scalar_one_or_none()
     
     def find_all_by_responsible(self, id_responsible: int):
-        return self.db.query(Task).filter(Task.id_responsible == id_responsible).all()
+        stmt = select(Task).where(Task.id_responsible == id_responsible)
+        return self.db.execute(stmt).scalars().all()
 
     def create(self, request: CreateTask, responsible: int):
         task = Task(**request.model_dump(exclude={'email'}), id_responsible=responsible)

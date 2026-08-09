@@ -13,7 +13,7 @@ async def login(request: LoginRequest, service: AuthService = Depends(get_auth_s
     response = service.login(request=request)
 
     if not response:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return response
 
 @auth_router.post(path='/register', response_model=UserResponse, status_code=status.HTTP_200_OK, summary='Register new users')

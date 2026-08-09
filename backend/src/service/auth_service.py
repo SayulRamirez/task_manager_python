@@ -1,3 +1,4 @@
+from config.jwt import JWTManager
 from dto.user_dto import LoginRequest, RegisterUser
 from repository.user_repository import UserRepository
 
@@ -7,8 +8,12 @@ class AuthService:
         self.user_repository = user_repository
 
     def login(self, request: LoginRequest):
-        if self.user_repository.login(request):
-            return { 'token': 'secret_token' }
+        user =  self.user_repository.authenticate(request)
+
+        if user:
+            return {'token': JWTManager.get_token(sub=user.email,
+                                                  user_id=user.id,
+                                                  extra_claims={'role': user.role})}
         return None
 
     def register(self, request: RegisterUser):

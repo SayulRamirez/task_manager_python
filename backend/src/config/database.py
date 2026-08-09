@@ -1,14 +1,10 @@
-import os
 
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-load_dotenv()
-DB_URL = os.getenv('SQLITE_PATH')
+from config.enviroment import get_env
 
-if not DB_URL:
-    raise ValueError('No se encontro la ruta de la base de datos')
+DB_URL = get_env('SQLITE_PATH')
 
 engine = create_engine(
     url=DB_URL,

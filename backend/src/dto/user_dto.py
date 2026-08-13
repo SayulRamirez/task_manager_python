@@ -1,9 +1,10 @@
-from typing import Literal, Optional
+from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 class AuthResponse(BaseModel):
-    token: str
+    access_token: str
+    token_type: str
 
 class UserBase(BaseModel):
     first_name: str = Field(alias='firstName', min_length=1, max_length=20, examples=['Juan'])
@@ -29,11 +30,8 @@ class UserCredential(BaseModel):
         validate_by_alias=True,
     )
 
-class LoginRequest(UserCredential):
+class RegisterUser(UserBase, UserCredential):
     password: str = Field(min_length=8, max_length=64, examples=['securet1234'])
-
-class RegisterUser(UserBase, LoginRequest):
-    pass
 
 class User(UserBase):
     id: int = Field(gt=0, examples=[4])

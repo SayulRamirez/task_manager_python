@@ -1,8 +1,11 @@
 import datetime
 
+from fastapi import HTTPException
+from starlette import status
 import jwt
 
 from config.enviroment import get_env
+from exceptions.auth import UnauthorizedUser
 
 SECRET_KEY = get_env('SECRET_KEY')
 ALGORITHM = get_env('ALGORITHM')
@@ -28,3 +31,12 @@ class JWTManager:
             payload.update(extra_claims.copy())
 
         return jwt.encode(payload, SECRET_KEY, ALGORITHM)
+    
+    @staticmethod
+    def decode_token(token: str):
+        try:
+            return jwt.decode(token, SECRET_KEY, [ALGORITHM])
+        except jwt.ExpiredSignatureError:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Expired token')
+        except jwt.InvalidTokenError:
+            raise UnauthorizedUser()

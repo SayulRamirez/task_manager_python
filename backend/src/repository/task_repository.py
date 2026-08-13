@@ -25,19 +25,22 @@ class TaskRepository():
         self.db.refresh(task)
         return task
     
-    def changed_status(self, id: int, change: Status):
+    def changed_status(self, id: int, change: Status, user_id: int):
         task = self.find_by_id(id)
-        if task:
-            task.status = change
-            self.db.commit()
-            self.db.refresh(task)
-            return task
-        return None
+
+        if not task or task.id_responsible != user_id:
+            return None
+
+        task.status = change
+        self.db.commit()
+        self.db.refresh(task)
+        return task
     
-    def deleted(self, id: int):
+    def deleted(self, id: int, user_id: int):
         task = self.find_by_id(id)
-        if task:
-            self.db.delete(task)
-            self.db.commit()
-            return True
-        return False
+        if not task or task.id_responsible != user_id:
+            return False
+        
+        self.db.delete(task)
+        self.db.commit()
+        return True

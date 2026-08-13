@@ -19,8 +19,7 @@ class ProjectBase(BaseModel):
     )
 
 class CreateProject(ProjectBase):
-    user_id: int = Field(gt=0, examples=[1])
-
+    
     @field_validator('estimated_completion')
     @classmethod
     def validate_feature_date(cls, value: date):

@@ -1,6 +1,7 @@
 from sqlalchemy import exists, select
 
-from dto.user_dto import LoginRequest, RegisterUser, UpdateUser
+from config.hashing import Hasher
+from dto.user_dto import RegisterUser, UpdateUser
 from models.user import User
 
 from sqlalchemy.orm import Session
@@ -35,13 +36,15 @@ class UserRepository:
         return user
 
     def register(self, request: RegisterUser):
+        request.password = Hasher.hash(request.password)
         user = User(**request.model_dump(exclude_none=True))
         self.db.add(user)
         self.db.commit()
         self.db.refresh(user)
         return user
     
-    def login(self, request: LoginRequest) -> bool:
-        stmt = select(exists().where(User.email == request.email,
-                                     User.password == request.password))
-        return bool(self.db.execute(stmt).scalar())
+    def authenticate(self, username: str, password: str) -> User | None:
+        user = self.find_by_email(username)
+        if not user or not user.is_active or not Hasher.verify(password, user.password):
+            return None
+        return user

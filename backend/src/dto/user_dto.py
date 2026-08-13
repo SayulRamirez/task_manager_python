@@ -1,9 +1,10 @@
-from typing import Literal, Optional
+from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 class AuthResponse(BaseModel):
-    token: str
+    access_token: str
+    token_type: str
 
 class UserBase(BaseModel):
     first_name: str = Field(alias='firstName', min_length=1, max_length=20, examples=['Juan'])
@@ -29,11 +30,8 @@ class UserCredential(BaseModel):
         validate_by_alias=True,
     )
 
-class LoginRequest(UserCredential):
-    password: str = Field(min_length=8, max_length=30, examples=['securet1234'])
-
-class RegisterUser(UserBase, LoginRequest):
-    pass
+class RegisterUser(UserBase, UserCredential):
+    password: str = Field(min_length=8, max_length=64, examples=['securet1234'])
 
 class User(UserBase):
     id: int = Field(gt=0, examples=[4])
@@ -41,20 +39,8 @@ class User(UserBase):
 class UserResponse(User, UserCredential):
     pass
 
-# class UserResponse(User, UserCredential):
-#     status: Literal['ACTIVE', 'BLOCKED', 'DELETED'] = Field()
-
-# class UpdateUser(UserBase):
-#     pass
-
 class UpdateUser(BaseModel):
     first_name: Optional[str] = Field(default=None, alias='firstName', min_length=1, max_length=20, examples=['Juan'])
     last_name: Optional[str] = Field(default=None, alias='lastName', min_length=1, max_length=20, examples=['Perez'])
     maternal_surname: Optional[str] = Field(default=None, alias='maternalSurname', min_length=1, max_length=20, examples=['Hernadez'])
     phone_number: Optional[str] = Field(default=None, alias='phoneNumber', min_length=10, max_length=15, examples=['37495849265'])
-
-class StatusUserRequest(BaseModel):
-    id: int = Field(gt=0)
-    status: Literal['ACTIVE', 'BLOCKED', 'DELETED'] = Field()
-
-

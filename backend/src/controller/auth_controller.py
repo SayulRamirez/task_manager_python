@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 
 from config.dependecies import get_auth_service
-from dto.user_dto import AuthResponse, LoginRequest, RegisterUser, UserResponse
+from dto.user_dto import AuthResponse, RegisterUser, UserResponse
 from service.auth_service import AuthService
 
 from starlette import status
@@ -9,11 +10,13 @@ from starlette import status
 auth_router = APIRouter(prefix='/auth', tags=['Auth Controller'])
 
 @auth_router.post(path='/login', response_model=AuthResponse, status_code=status.HTTP_200_OK, summary='Login de la app')
-async def login(request: LoginRequest, service: AuthService = Depends(get_auth_service)):
-    response = service.login(request=request)
+async def login(request: OAuth2PasswordRequestForm = Depends(OAuth2PasswordRequestForm),
+                service: AuthService = Depends(get_auth_service)):
+
+    response = service.login(request.username, request.password)
 
     if not response:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return response
 
 @auth_router.post(path='/register', response_model=UserResponse, status_code=status.HTTP_200_OK, summary='Register new users')

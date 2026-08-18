@@ -5,8 +5,8 @@ from fastapi.security import OAuth2PasswordBearer
 
 from config.dependecies import get_user_repository
 from config.jwt import JWTManager
-from exceptions.auth import UnauthorizedUser
-from models.user import User
+from exceptions.auth import ForbiddenException, UnauthorizedUser
+from models.user import Role, User
 from repository.user_repository import UserRepository
 
 
@@ -28,3 +28,13 @@ async def get_current_user(token: auth_depends, user_repository: UserRepository 
     return user
 
 filter_token = Annotated[User, Depends(get_current_user)]
+
+
+class RoleChecker:
+    def __init__(self, allowed_roles: list[Role]):
+        self.allowed_roles = allowed_roles
+    
+    def __call__(self, user: filter_token) -> User:
+        if user.role not in self.allowed_roles:
+            raise ForbiddenException()
+        return user

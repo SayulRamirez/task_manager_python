@@ -4,7 +4,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 from config.enviroment import get_env
 
-DB_URL = get_env('SQLITE_PATH')
+DB_URL = get_env('DB_URL')
 
 engine = create_engine(
     url=DB_URL,

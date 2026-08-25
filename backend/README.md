@@ -45,7 +45,7 @@ pip install -r requirements.txt
 ### 4. Variables de Entorno
 El proyecto utiliza un sistema estricto de variables de entorno. Crea un archivo llamado `.env` en la raíz de la carpeta `backend/` con la siguiente estructura (ajusta los valores según sea necesario):
 ```env
-SQLITE_PATH=sqlite:///./app.db
+DB_URL=sqlite:///./app.db
 SECRET_KEY=ingresa_aqui_tu_clave_secreta_super_segura
 ALGORITHM=HS256
 TOKEN_EXPIRE_MINUTES=30

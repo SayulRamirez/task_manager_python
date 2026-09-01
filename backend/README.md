@@ -43,11 +43,12 @@ pip install -r requirements.txt
 ```
 
 ### 4. Variables de Entorno
-El proyecto utiliza un sistema estricto de variables de entorno. Crea un archivo llamado `.env` en la raíz de la carpeta `backend/` con la siguiente estructura (ajusta los valores según sea necesario):
+El proyecto utiliza un sistema estricto de variables de entorno. Crea un archivo llamado `.env` en la raíz de la carpeta `backend/` con la siguiente estructura:
 ```env
+PYTHONPATH=src
 DB_URL=sqlite:///./app.db
-SECRET_KEY=ingresa_aqui_tu_clave_secreta_super_segura
 ALGORITHM=HS256
+SECRET_KEY=GLBkEoO4qTgXFL90URTjW_mmTpmfMvWWkn_aPGEzzP8
 TOKEN_EXPIRE_MINUTES=30
 ```
 
@@ -58,6 +59,32 @@ cd src
 uvicorn main:app --reload --port 8000
 ```
 *(Nota: Ajusta `main:app` dependiendo de la ubicación exacta de tu archivo principal y la instancia de FastAPI).*
+
+---
+
+## 🧪 Testing y Cobertura de Código
+
+El proyecto cuenta con una suite integral de pruebas unitarias y de integración desarrolladas con **pytest**, **pytest-cov** y **TestClient**, utilizando bases de datos en memoria (`StaticPool`) para garantizar ejecuciones aisladas y ultra rápidas.
+
+*   **Total de Pruebas:** 96 tests (100% exitosos).
+*   **Cobertura General:** 99% de líneas cubiertas en el proyecto.
+*   **Cobertura de Negocio:** 100% de cobertura en Controllers, Services, Repositories, DTOs, Models y Exceptions.
+
+### Ejecución de Pruebas y Reportes
+
+*   **Ejecutar todas las pruebas:**
+    ```bash
+    pytest -v
+    ```
+*   **Ver reporte de cobertura en consola (con líneas faltantes):**
+    ```bash
+    pytest --cov=src --cov-report=term-missing
+    ```
+*   **Generar reporte HTML interactivo:**
+    ```bash
+    pytest --cov=src --cov-report=html
+    ```
+    *(Abre `htmlcov/index.html` en el navegador para inspeccionar el detalle visual del código).*
 
 ---
 

@@ -13,7 +13,7 @@ from repository.user_repository import UserRepository
 oauth = OAuth2PasswordBearer(tokenUrl='/auth/login')
 auth_depends = Annotated[str, Depends(oauth)]
 
-async def get_current_user(token: auth_depends, user_repository: UserRepository = Depends(get_user_repository)):
+def get_current_user(token: auth_depends, user_repository: UserRepository = Depends(get_user_repository)):
     payload = JWTManager.decode_token(token)
     user_id: int = payload.get('id')
 

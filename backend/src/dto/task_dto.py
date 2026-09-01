@@ -20,7 +20,7 @@ class TaskBase(BaseModel):
 
 class CreateTask(TaskBase):
     email: EmailStr = Field(examples=['juan.perez@dominio.com'])
-    project_id: int = Field(gt=0, examples=[6])
+    project_id: int = Field(alias='projectId', gt=0, examples=[6])
     
     @field_validator('estimated_delivery')
     @classmethod

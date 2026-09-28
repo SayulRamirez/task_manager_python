@@ -4,7 +4,7 @@ import enum
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
-from config.database import Base
+from config.db.base import Base
 from models.project import Status
 
 class Priority(str, enum.Enum):

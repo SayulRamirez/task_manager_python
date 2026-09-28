@@ -2,7 +2,7 @@ from fastapi import Depends
 
 from sqlalchemy.orm import Session
 
-from config.database import get_db
+from config.db.database import get_db
 from repository.projec_repository import ProjectRepository
 from repository.task_repository import TaskRepository
 from repository.user_repository import UserRepository

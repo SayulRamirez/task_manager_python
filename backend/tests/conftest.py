@@ -1,24 +1,19 @@
 import os
 import sys
-
 from fastapi.testclient import TestClient
 import pytest
-from sqlalchemy import StaticPool, create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from config.database import Base, get_db
+from config.enviroment import get_env
+from models import Base
+from config.db.database import get_db
 from main import app
 
-TEST_DATABASE_URL = 'sqlite:///:memory:'
-
-engine = create_engine(
-    TEST_DATABASE_URL,
-    connect_args={'check_same_thread': False},
-    poolclass=StaticPool
-)
-
+TEST_DB_URL = get_env('TEST_DB_URL')
+engine = create_engine(TEST_DB_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -27,8 +22,6 @@ def setup_test_db():
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
-    if os.path.exists('./test.db'):
-        os.remove('./test.db')
 
 
 @pytest.fixture
@@ -38,7 +31,6 @@ def db_session():
         yield session
     finally:
         session.close()
-        # Garantiza la limpieza total de datos en cada test aunque haya commits
         with engine.begin() as conn:
             for table in reversed(Base.metadata.sorted_tables):
                 conn.execute(table.delete())

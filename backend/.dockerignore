@@ -1,0 +1,23 @@
+# Archivos temporales y cachés de Python (OBLIGATORIO)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caché de Pytest (OBLIGATORIO)
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Entornos virtuales locales
+.venv/
+venv/
+env/
+
+# Archivos de configuración local e IDEs
+.env
+*.env
+.vscode/
+.idea/
+.git/
+
+test/

@@ -1,0 +1,13 @@
+<div class="md:hidden mt-6 text-center text-xs text-slate-400"
+    [class.mt-8]="!isRegister()"
+    [class.mt-6]="isRegister()"
+>
+    <span>{{ message() }}</span>
+    <button (click)="onToggleAuth()" type="button"
+        class="block w-full font-semibold mt-1 cursor-pointer hover:underline"
+        [class.text-emerald-400]="isRegister()"
+        [class.text-indigo-400]="!isRegister()"
+        >
+        {{ titleButton() }}
+    </button>
+</div>

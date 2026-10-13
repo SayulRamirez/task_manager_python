@@ -50,14 +50,7 @@
                     </form>
                 </div>
 
-                <!-- Leyenda inferior (Solo visible en móviles) -->
-                <div class="md:hidden mt-8 text-center text-xs text-slate-400">
-                    <span>¿No tienes una cuenta aún?</span>
-                    <button (click)="toggleAuth()" type="button"
-                        class="block w-full text-indigo-400 font-semibold mt-1 cursor-pointer hover:underline">
-                        Regístrate aquí
-                    </button>
-                </div>
+                <app-mobile-toggle [message]="'¿No tienes una cuenta aún?'" [titleButton]="'Regístrate aquí'" [isRegister]="false" (toggleAuth)="toggleAuth()" />
             </div>
 
             <!-- ==================== SECCIÓN 2: REGISTRO ==================== -->
@@ -148,15 +141,8 @@
                         </div>
                     </form>
                 </div>
-
-                <!-- Leyenda inferior (Solo visible en móviles) -->
-                <div class="md:hidden mt-6 text-center text-xs text-slate-400">
-                    <span>¿Ya tienes una cuenta registrada?</span>
-                    <button (click)="toggleAuth()" type="button"
-                        class="block w-full text-emerald-400 font-semibold mt-1 cursor-pointer hover:underline">
-                        Inicia sesión aquí
-                    </button>
-                </div>
+                
+                <app-mobile-toggle [message]="'¿Ya tienes una cuenta registrada?'" [titleButton]="'Inicia sesión aquí'" [isRegister]="true" (toggleAuth)="toggleAuth()" />
             </div>
 
             <div 

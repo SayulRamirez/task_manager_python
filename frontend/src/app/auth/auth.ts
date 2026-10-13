@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { DesktopToggle } from './component/desktop-toggle/desktop-toggle';
+import { MobileToggle } from './component/mobile-toggle/mobile-toggle';
 
 @Component({
-  imports: [DesktopToggle],
+  imports: [DesktopToggle, MobileToggle],
   selector: 'app-auth',
   styleUrl: './auth.css',
   templateUrl: './auth.html',

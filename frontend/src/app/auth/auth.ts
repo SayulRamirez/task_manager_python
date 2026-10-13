@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import { Slide } from './slide/slide';
 
 @Component({
-  imports: [],
+  imports: [Slide],
   selector: 'app-auth',
   styleUrl: './auth.css',
   templateUrl: './auth.html',
@@ -11,5 +12,9 @@ export class Auth {
 
   toggleAuth() {
     this.isRegister = !this.isRegister;
+  }
+
+  selectToggleAuth(isSelected: boolean) {
+    this.isRegister = isSelected;
   }
 }

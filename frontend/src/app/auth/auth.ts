@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Slide } from './slide/slide';
+import { DesktopToggle } from './component/desktop-toggle/desktop-toggle';
 
 @Component({
-  imports: [Slide],
+  imports: [DesktopToggle],
   selector: 'app-auth',
   styleUrl: './auth.css',
   templateUrl: './auth.html',

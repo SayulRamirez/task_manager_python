@@ -160,26 +160,27 @@
             </div>
 
             <div 
-            class="hidden md:flex absolute top-0 left-0 w-1/2 h-full z-10 flex-col justify-center items-center p-8 via-indigo-800 to-slate-900 text-white text-center transition-all duration-700 ease-in-out border-r border-indigo-500/20 shadow-2xl"
+            class="hidden md:flex absolute top-0 right-0 w-1/2 h-full z-10 flex-col justify-center items-center p-8 via-indigo-800 to-slate-900 text-white text-center transition-all duration-700 ease-in-out border-l border-indigo-500/20 shadow-2xl"
             [class.bg-gradient-to-br]="!isRegister" 
             [class.from-indigo-600]="!isRegister"
             [class.bg-gradient-to-bl]="isRegister" 
             [class.from-indigo-700]="isRegister"
-            [class.translate-x-full]="!isRegister">
+            [class.-translate-x-full]="isRegister">
 
             @if (!isRegister) {
-                <app-slide 
+                <app-desktop-toggle 
                 question="¿Primera vez por aquí?"
                 description="Regístrate para colaborar con tu equipo y dar seguimiento a tus proyectos asignados."
                 titleButton="Crear una cuenta"
                 (toggleAuth)="toggleAuth()" />
             } @else {
-                <app-slide 
+                <app-desktop-toggle 
                 question="¿Ya eres parte del equipo?"
                 description="Inicia sesión para revisar tus tareas pendientes y actualizar tu avance del día."
                 titleButton="Iniciar Sesión"
                 (toggleAuth)="toggleAuth()" />
             }
+
             </div>
         </div>
     </div>

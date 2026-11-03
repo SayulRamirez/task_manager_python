@@ -42,16 +42,29 @@
             </app-form-content>
 
             <app-form-content [isRegister]="!isRegister" formTitle="Registro de Usuario" formMessage="Crea tu cuenta personal para asignación de tareas.">
-                <form action="/enviar-datos" method="post" class="space-y-4">
+                <form [formGroup]="formRegister" (ngSubmit)="onSubmitRegister()" class="space-y-4">
                     <!-- Nombre(s) y Apellido Paterno -->
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
-                            <label for="firstName"
+                            <label
                                 class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
                                 Nombre(s)
                             </label>
-                            <input type="text" id="firstName" name="firstName" placeholder="Juan" required
+                            <input type="text" id="firstName" formControlName="firstName" placeholder="Juan"
                                 class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+                            @if (firstName?.invalid && (firstName?.touched || firstName?.dirty)) {
+                            <div class="mt-1 block text-xs font-extralight tracking-wider text-red-500">
+                                @if (firstName.hasError('required')) {
+                                    <span>Requerido. </span>
+                                }
+                                @if (firstName.hasError('minlength')) {
+                                    <span>Al menos 1 caracter. </span>
+                                }
+                                @if (firstName.hasError('maxlength')) {
+                                    <span>Máximo 20 caracteres. </span>
+                                } 
+                            </div>
+                            }
                         </div>
     
                         <div>
@@ -59,8 +72,21 @@
                                 class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
                                 Apellido Paterno
                             </label>
-                            <input type="text" id="lastName" name="lastName" placeholder="Pérez" required
+                            <input type="text" id="lastName" formControlName="lastName" placeholder="Pérez"
                                 class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+                            @if (lastName?.invalid && (lastName?.touched || lastName?.dirty)) {
+                            <div class="mt-1 block text-xs font-extralight tracking-wider text-red-500">
+                                @if (lastName.hasError('required')) {
+                                    <span>El nombre es requerido. </span>
+                                }
+                                @if (lastName.hasError('minlength')) {
+                                    <span>Al menos 1 caracter. </span>
+                                }
+                                @if (lastName.hasError('maxlength')) {
+                                    <span>Máximo 20 caracteres. </span>
+                                } 
+                            </div>
+                            }
                         </div>
                     </div>
     
@@ -71,7 +97,7 @@
                                 class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
                                 Apellido Materno
                             </label>
-                            <input type="text" id="maternalSurname" name="maternalSurname" placeholder="Gómez"
+                            <input type="text" id="maternalSurname" formControlName="maternalSurname" placeholder="Gómez"
                                 class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
                         </div>
     
@@ -80,8 +106,21 @@
                                 class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
                                 Teléfono
                             </label>
-                            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="5512345678" required
+                            <input type="tel" id="phoneNumber" formControlName="phoneNumber" placeholder="5512345678"
                                 class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+                            @if (phoneNumber?.invalid && (phoneNumber?.touched || phoneNumber?.dirty)) {
+                            <div class="mt-1 block text-xs font-extralight tracking-wider text-red-500">
+                                @if (phoneNumber.hasError('required')) {
+                                    <span>Requerido. </span>
+                                }
+                                @if (phoneNumber.hasError('minlength')) {
+                                    <span>Al menos 10 caracteres. </span>
+                                }
+                                @if (phoneNumber.hasError('maxlength')) {
+                                    <span>Máximo 15 caracter. </span>
+                                } 
+                            </div>
+                            }
                         </div>
                     </div>
     
@@ -95,10 +134,20 @@
                             <div>
                                 <label for="reg-username"
                                     class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
-                                    Usuario
+                                    Email
                                 </label>
-                                <input type="text" id="reg-username" name="username" placeholder="jperez" required
+                                <input type="email" id="reg-email" formControlName="email" placeholder="juan.perez@example.com"
                                     class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-1.5 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+                                @if (email?.invalid && (email?.touched || email?.dirty)) {
+                                <div class="mt-1 block text-xs font-extralight tracking-wider text-red-500">
+                                    @if (email.hasError('required')) {
+                                        <span>Requerido. </span>
+                                    }
+                                    @if (email.hasError('email')) {
+                                        <span>Formato invalido. </span>
+                                    }
+                                </div>
+                                }
                             </div>
     
                             <div>
@@ -106,9 +155,21 @@
                                     class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
                                     Contraseña
                                 </label>
-                                <input type="password" id="reg-password" name="password" placeholder="••••••••"
-                                    required
+                                <input type="password" id="reg-password" formControlName="password" placeholder="••••••••"
                                     class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-1.5 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+                                @if (password?.invalid && (password.touched || password.dirty)) {
+                                <div class="mt-1 block text-xs font-extralight tracking-wider text-red-500">
+                                    @if (password.hasError('required')) {
+                                        <span>Requerido. </span>
+                                    }
+                                    @if (password.hasError('minlength')) {
+                                        <span>Al menos 8 caractes. </span>
+                                    }
+                                    @if (password.hasError('maxlength')) {
+                                        <span>Máximo 64 caractes. </span>
+                                    } 
+                                </div>
+                                }
                             </div>
                         </div>
                     </div>

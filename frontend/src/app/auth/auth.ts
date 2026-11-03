@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { DesktopToggle } from './component/desktop-toggle/desktop-toggle';
 import { MobileToggle } from './component/mobile-toggle/mobile-toggle';
+import { FormContent } from './component/form-content/form-content';
 
 @Component({
-  imports: [DesktopToggle, MobileToggle],
+  imports: [DesktopToggle, MobileToggle, FormContent],
   selector: 'app-auth',
   styleUrl: './auth.css',
   templateUrl: './auth.html',
@@ -13,9 +14,5 @@ export class Auth {
 
   toggleAuth() {
     this.isRegister = !this.isRegister;
-  }
-
-  selectToggleAuth(isSelected: boolean) {
-    this.isRegister = isSelected;
   }
 }

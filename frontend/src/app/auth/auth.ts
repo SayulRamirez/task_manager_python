@@ -1,8 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { DesktopToggle } from './component/desktop-toggle/desktop-toggle';
 import { MobileToggle } from './component/mobile-toggle/mobile-toggle';
 import { FormContent } from './component/form-content/form-content';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService, UserRegister } from '../services/auth.service';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 
 @Component({
   imports: [ReactiveFormsModule, DesktopToggle, MobileToggle, FormContent],
@@ -13,6 +15,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 export class Auth {
   isRegister = false;
 
+  showError = signal(false);
+  showSuccess = signal(false);
+  isLoading = signal(false);
+  erroMessage = '';
+  successMessage = '';
+
+  private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
 
   formRegister = this.formBuilder.group({
@@ -33,6 +42,14 @@ export class Auth {
 
   toggleAuth() {
     this.isRegister = !this.isRegister;
+    this.clearAlerts();
+  }
+
+  clearAlerts() {
+    this.showError.set(false);
+    this.showSuccess.set(false);
+    this.erroMessage = '';
+    this.successMessage = '';
   }
 
   onSubmitRegister() {
@@ -41,22 +58,41 @@ export class Auth {
       return;
     }
 
-    const {
-      email, 
-      firstName,
-      lastName,
-      maternalSurname,
-      phoneNumber,
-      password
-    } = this.formRegister.value;
+    this.clearAlerts();
+    this.isLoading.set(true);
 
-    console.log('Datos listos para el backend: ', {
-      email, 
-      firstName,
-      lastName,
-      maternalSurname,
-      phoneNumber,
-      password
+    const userRegister = this.formRegister.value as UserRegister;
+
+    this.authService.register(userRegister).subscribe({
+      next: (response) => {
+        this.isLoading.set(false);
+        this.successMessage = '¡Cuenta creada con éxito! Redirigiendo al login...';
+        this.showSuccess.set(true);
+        
+        const registeredEmail = response.email;
+
+        this.formRegister.reset();
+
+        setTimeout(() => {
+          this.isRegister = false;
+          this.showSuccess.set(false);
+        }, 2000);
+      },
+
+      error: (error: HttpErrorResponse) => {
+        if (error.status === HttpStatusCode.Conflict) {
+          this.erroMessage = 'Email ya registrado';
+        } else if (error.status === HttpStatusCode.BadRequest) {
+          this.erroMessage = 'Por favor verifica los datos ingresados';
+        } else {
+          this.erroMessage = 'Ocurrió un error inesperado, intenta más tarde';
+        }
+        this.showError.set(true);
+        setTimeout(() => {
+          this.isLoading.set(false);
+        }, 2000);
+        // 12345678
+      }
     });
   }
 }

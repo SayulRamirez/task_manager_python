@@ -11,9 +11,9 @@ SECRET_KEY = get_env('SECRET_KEY')
 ALGORITHM = get_env('ALGORITHM')
 
 try:
-    EXPIRE_MINUTES = int(get_env('TOKEN_EXPIRE_MINUTES'))
+    EXPIRE_SECONDS = int(get_env('TOKEN_EXPIRE_SECONDS'))
 except ValueError:
-    EXPIRE_MINUTES = 30
+    EXPIRE_SECONDS = 3600
 
 class JWTManager:
 
@@ -24,7 +24,7 @@ class JWTManager:
             'id': user_id,
         }
 
-        expires = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=EXPIRE_MINUTES)
+        expires = datetime.datetime.now(datetime.UTC) + datetime.timedelta(seconds=EXPIRE_SECONDS)
         payload.update({'exp': expires})
 
         if extra_claims:

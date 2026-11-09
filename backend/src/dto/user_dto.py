@@ -2,10 +2,6 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-class AuthResponse(BaseModel):
-    access_token: str
-    token_type: str
-
 class UserBase(BaseModel):
     first_name: str = Field(alias='firstName', min_length=1, max_length=20, examples=['Juan'])
     last_name: str = Field(alias='lastName', min_length=1, max_length=20, examples=['Perez'])

@@ -3,7 +3,7 @@ import { DesktopToggle } from './component/desktop-toggle/desktop-toggle';
 import { MobileToggle } from './component/mobile-toggle/mobile-toggle';
 import { FormContent } from './component/form-content/form-content';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService, UserRegister } from '../services/auth.service';
+import { AuthService, LoginRequest, UserRegister } from '../services/auth.service';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 
 @Component({
@@ -24,8 +24,13 @@ export class Auth {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
 
+  formLogin = this.formBuilder.group({
+    username: ['', [Validators.required, Validators.email, Validators.minLength(7)]],
+    password: ['', [Validators.required, Validators.minLength(8)]]
+  });
+
   formRegister = this.formBuilder.group({
-    email: ['', [Validators.required, Validators.email ]],
+    email: ['', [Validators.required, Validators.email, Validators.minLength(7)]],
     firstName: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(20)]],
     lastName: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(20)]],
     maternalSurname: ['' ,[Validators.minLength(1), Validators.maxLength(20)]],
@@ -50,6 +55,45 @@ export class Auth {
     this.showSuccess.set(false);
     this.erroMessage = '';
     this.successMessage = '';
+  }
+
+  onSubmitLogin() {
+    if (this.formLogin.invalid) {
+      this.formLogin.markAllAsTouched();
+      return;
+    }
+
+    this.clearAlerts();
+    this.isLoading.set(true);
+
+    const loginRequest = this.formLogin.value as LoginRequest;
+
+    this.authService.login(loginRequest).subscribe({
+      next: (response) => {
+        this.isLoading.set(false);
+        this.successMessage = 'Login exitoso';
+        this.showSuccess.set(true);
+
+        this.formRegister.reset();
+
+        setTimeout(() => {
+          this.isRegister = false;
+          this.showSuccess.set(false);
+        }, 2000);
+      },
+
+      error: (error: HttpErrorResponse) => {
+        if (error.status === HttpStatusCode.Unauthorized) {
+          this.erroMessage = 'Usuario o contraseña incorrectos';
+        } else {
+          this.erroMessage = 'Ocurrió un error inesperado, intenta más tarde';
+        }
+        this.showError.set(true);
+        setTimeout(() => {
+          this.isLoading.set(false);
+        }, 2000);
+      }
+    });
   }
 
   onSubmitRegister() {

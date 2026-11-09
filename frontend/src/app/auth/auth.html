@@ -10,24 +10,22 @@
 
         <div class="relative grid grid-cols-1 md:grid-cols-2">
             <app-form-content [isRegister]="isRegister" formTitle="Iniciar Sesión" formMessage="Ingresa tu usuario y contraseña para acceder.">
-                <form action="/enviar-datos" method="post" class="space-y-4">
-                    <!-- Username -->
+                <form [formGroup]="formLogin" (ngSubmit)="onSubmitLogin()" class="space-y-4">
                     <div>
-                        <label for="login-username"
+                        <label
                             class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
                             Usuario
                         </label>
-                        <input type="text" id="login-username" name="username" placeholder="ej. jperez" required
+                        <input type="text" formControlName="username" placeholder="juan@example.com"
                             class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
                     </div>
-    
-                    <!-- Password -->
+
                     <div>
-                        <label for="login-password"
+                        <label
                             class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
                             Contraseña
                         </label>
-                        <input type="password" id="login-password" name="password" required placeholder="••••••••"
+                        <input type="password" formControlName="password" required placeholder="••••••••"
                             class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
                     </div>
     

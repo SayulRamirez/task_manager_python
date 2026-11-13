@@ -17,7 +17,7 @@ class AuthService:
             token = JWTManager.get_token(sub=user.email,
                                          user_id=user.id,
                                          extra_claims={'role': user.role})
-            return {'access_token': token, 'token_type': 'bearer'}
+            return { 'access_token': token }
         return None
 
     def register(self, request: RegisterUser):

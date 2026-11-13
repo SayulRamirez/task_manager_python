@@ -1,0 +1,7 @@
+<span>{{ contentToggle().message }}</span>
+<button (click)="onToggleAuth()" type="button"
+    class="block w-full font-semibold mt-1 cursor-pointer hover:underline"
+    [class.text-emerald-400]="isRegister()"
+    [class.text-indigo-400]="!isRegister()">
+    {{ contentToggle().titleButton }}
+</button>

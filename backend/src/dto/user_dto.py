@@ -2,14 +2,10 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-class AuthResponse(BaseModel):
-    access_token: str
-    token_type: str
-
 class UserBase(BaseModel):
     first_name: str = Field(alias='firstName', min_length=1, max_length=20, examples=['Juan'])
     last_name: str = Field(alias='lastName', min_length=1, max_length=20, examples=['Perez'])
-    maternal_surname: str = Field(alias='maternalSurname', min_length=1, examples=['Hernadez'])
+    maternal_surname: Optional[str] = Field(alias='maternalSurname', examples=['Hernadez'])
     phone_number: str = Field(alias='phoneNumber', min_length=10, max_length=15, examples=['37495849265'])
 
     model_config = ConfigDict(

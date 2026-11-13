@@ -1,241 +1,28 @@
-<div class="flex min-h-screen w-full items-center justify-center bg-slate-950 p-4 sm:p-6 lg:p-8">
-    <div
-        class="w-full max-w-5xl overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/90 shadow-2xl backdrop-blur-sm">
-        <div class="border-b border-slate-800 bg-slate-900 px-6 py-4 text-center sm:px-8">
-            <h1 class="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-                Task<span class="text-indigo-500">Manager</span>
-            </h1>
-            <p class="text-xs text-slate-400 sm:text-sm">Plataforma de gestión de tareas empresariales</p>
-        </div>
-
-        <div class="relative grid grid-cols-1 md:grid-cols-2">
-            <app-form-content [isRegister]="isRegister" formTitle="Iniciar Sesión" formMessage="Ingresa tu usuario y contraseña para acceder.">
-                <form [formGroup]="formLogin" (ngSubmit)="onSubmitLogin()" class="space-y-4">
-                    <div>
-                        <label
-                            class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
-                            Usuario
-                        </label>
-                        <input type="text" formControlName="username" placeholder="juan@example.com"
-                            class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
-                    </div>
-
-                    <div>
-                        <label
-                            class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
-                            Contraseña
-                        </label>
-                        <input type="password" formControlName="password" required placeholder="••••••••"
-                            class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
-                    </div>
-    
-                    <div class="pt-2">
-                        <button type="submit" [disabled]="isLoading()"
-                            class="w-full rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition duration-200 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 active:scale-[0.98]">
-                             @if (isLoading()) {
-                                <span>Procesando...</span>
-                            } @else {
-                                <span>Ingresar al sistema</span>
-                            }
-                        </button>
-                    </div>
-                </form>
-                <app-mobile-toggle message="¿No tienes una cuenta aún?" titleButton="Regístrate aquí" [isRegister]="false" (toggleAuth)="toggleAuth()" />
-                @if (showError()) {
-                <div class="mt-4 mb-4 rounded-lg bg-red-500/10 border border-red-500/30 p-3 text-sm text-red-400 text-center animate-fade-in">
-                    {{ erroMessage }}
+<div class="w-full max-w-md md:max-w-2xl lg:max-w-3xl overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/90 shadow-2xl backdrop-blur-sm">
+    <div class="border-b border-slate-800 bg-slate-900 px-6 py-4 text-center sm:px-8">
+        <h1 class="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+            Task<span class="text-indigo-500">Manager</span>
+        </h1>
+        <p class="text-xs text-slate-400 sm:text-xs">Plataforma de gestión de tareas empresariales</p>
+    </div>
+    <div class="relative grid grid-cols-1 md:grid-cols-2 md:min-h-[379px]">
+        <div class="flex flex-col justify-between p-6 sm:p-8 transition-all duration-500 ease-in-out"
+            [class.md:flex]="true"
+            [class.bg-slate-900/50]="isRegister()"
+            [class.md:col-2]="isRegister()">
+            <div>
+                <div class="mb-6"> 
+                    <h2 class="text-xl font-bold text-white">{{ dataFormHeader().formTitle }}</h2>
+                    <p class="text-xs text-slate-400">{{ dataFormHeader().formMessage }}</p>
                 </div>
+                @if (!isRegister()) {
+                    <app-login />
+                } @else {
+                    <app-register (toggleAuth)="toggleAuth()" />
                 }
-
-                <!-- Alerta de Éxito -->
-                @if (showSuccess()) {
-                <div class="mt-4 mb-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30 p-3 text-sm text-emerald-400 text-center animate-fade-in">
-                    {{ successMessage }}
-                </div>
-                }
-            </app-form-content>
-
-            <app-form-content [isRegister]="!isRegister" formTitle="Registro de Usuario" formMessage="Crea tu cuenta personal para asignación de tareas.">
-                <form [formGroup]="formRegister" (ngSubmit)="onSubmitRegister()" class="space-y-4">
-                    <!-- Nombre(s) y Apellido Paterno -->
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <div>
-                            <label
-                                class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
-                                Nombre(s)
-                            </label>
-                            <input type="text" id="firstName" formControlName="firstName" placeholder="Juan"
-                                class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
-                            @if (firstName?.invalid && (firstName?.touched || firstName?.dirty)) {
-                            <div class="mt-1 block text-xs font-extralight tracking-wider text-red-500">
-                                @if (firstName.hasError('required')) {
-                                    <span>Requerido. </span>
-                                }
-                                @if (firstName.hasError('minlength')) {
-                                    <span>Al menos 1 caracter. </span>
-                                }
-                                @if (firstName.hasError('maxlength')) {
-                                    <span>Máximo 20 caracteres. </span>
-                                } 
-                            </div>
-                            }
-                        </div>
-    
-                        <div>
-                            <label for="lastName"
-                                class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
-                                Apellido Paterno
-                            </label>
-                            <input type="text" id="lastName" formControlName="lastName" placeholder="Pérez"
-                                class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
-                            @if (lastName?.invalid && (lastName?.touched || lastName?.dirty)) {
-                            <div class="mt-1 block text-xs font-extralight tracking-wider text-red-500">
-                                @if (lastName.hasError('required')) {
-                                    <span>Requerido. </span>
-                                }
-                                @if (lastName.hasError('minlength')) {
-                                    <span>Al menos 1 caracter. </span>
-                                }
-                                @if (lastName.hasError('maxlength')) {
-                                    <span>Máximo 20 caracteres. </span>
-                                } 
-                            </div>
-                            }
-                        </div>
-                    </div>
-    
-                    <!-- Apellido Materno y Teléfono -->
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <div>
-                            <label for="maternalSurname"
-                                class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
-                                Apellido Materno
-                            </label>
-                            <input type="text" id="maternalSurname" formControlName="maternalSurname" placeholder="Gómez"
-                                class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
-                        </div>
-    
-                        <div>
-                            <label for="phoneNumber"
-                                class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
-                                Teléfono
-                            </label>
-                            <input type="tel" id="phoneNumber" formControlName="phoneNumber" placeholder="5512345678"
-                                class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3.5 py-2 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
-                            @if (phoneNumber?.invalid && (phoneNumber?.touched || phoneNumber?.dirty)) {
-                            <div class="mt-1 block text-xs font-extralight tracking-wider text-red-500">
-                                @if (phoneNumber.hasError('required')) {
-                                    <span>Requerido. </span>
-                                }
-                                @if (phoneNumber.hasError('minlength')) {
-                                    <span>Al menos 10 caracteres. </span>
-                                }
-                                @if (phoneNumber.hasError('maxlength')) {
-                                    <span>Máximo 15 caracter. </span>
-                                } 
-                            </div>
-                            }
-                        </div>
-                    </div>
-    
-                    <!-- Subsección: Credenciales -->
-                    <div class="mt-4 rounded-xl border border-slate-800 bg-slate-950/60 p-3.5">
-                        <span class="mb-3 block text-xs font-semibold text-indigo-400">
-                            Credenciales de acceso
-                        </span>
-    
-                        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                            <div>
-                                <label for="reg-username"
-                                    class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
-                                    Email
-                                </label>
-                                <input type="email" id="reg-email" formControlName="email" placeholder="juan.perez@example.com"
-                                    class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-1.5 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
-                                @if (email?.invalid && (email?.touched || email?.dirty)) {
-                                <div class="mt-1 block text-xs font-extralight tracking-wider text-red-500">
-                                    @if (email.hasError('required')) {
-                                        <span>Requerido. </span>
-                                    }
-                                    @if (email.hasError('email')) {
-                                        <span>Formato invalido. </span>
-                                    }
-                                </div>
-                                }
-                            </div>
-    
-                            <div>
-                                <label for="reg-password"
-                                    class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
-                                    Contraseña
-                                </label>
-                                <input type="password" id="reg-password" formControlName="password" placeholder="••••••••"
-                                    class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-1.5 text-sm text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
-                                @if (password?.invalid && (password.touched || password.dirty)) {
-                                <div class="mt-1 block text-xs font-extralight tracking-wider text-red-500">
-                                    @if (password.hasError('required')) {
-                                        <span>Requerido. </span>
-                                    }
-                                    @if (password.hasError('minlength')) {
-                                        <span>Al menos 8 caractes. </span>
-                                    }
-                                    @if (password.hasError('maxlength')) {
-                                        <span>Máximo 64 caractes. </span>
-                                    } 
-                                </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="pt-2">
-                        <button type="submit" [disabled]="isLoading()"
-                            class="w-full rounded-lg border border-indigo-500/30 bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition duration-200 hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 active:scale-[0.98]">
-                            @if (isLoading()) {
-                                <span>Procesando...</span>
-                            } @else {
-                                <span>Crear cuenta</span>
-                            }
-                        </button>
-                    </div>
-                </form>
-                @if (showError()) {
-                <div class="mt-4 mb-4 rounded-lg bg-red-500/10 border border-red-500/30 p-3 text-sm text-red-400 text-center animate-fade-in">
-                    {{ erroMessage }}
-                </div>
-                }
-
-                @if (showSuccess()) {
-                <div class="mt-4 mb-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30 p-3 text-sm text-emerald-400 text-center animate-fade-in">
-                    {{ successMessage }}
-                </div>
-                }
-                <app-mobile-toggle message="¿Ya tienes una cuenta registrada?" titleButton="Inicia sesión aquí" [isRegister]="true" (toggleAuth)="toggleAuth()" />
-            </app-form-content>
-
-            <div 
-            class="hidden md:flex absolute top-0 right-0 w-1/2 h-full z-10 flex-col justify-center items-center p-8 via-indigo-800 to-slate-900 text-white text-center transition-all duration-700 ease-in-out border-l border-indigo-500/20 shadow-2xl"
-            [class.bg-gradient-to-br]="!isRegister" 
-            [class.from-indigo-600]="!isRegister"
-            [class.bg-gradient-to-bl]="isRegister" 
-            [class.from-indigo-700]="isRegister"
-            [class.-translate-x-full]="isRegister">
-
-            @if (!isRegister) {
-                <app-desktop-toggle 
-                question="¿Primera vez por aquí?"
-                description="Regístrate para colaborar con tu equipo y dar seguimiento a tus proyectos asignados."
-                titleButton="Crear una cuenta"
-                (toggleAuth)="toggleAuth()" />
-            } @else {
-                <app-desktop-toggle 
-                question="¿Ya eres parte del equipo?"
-                description="Inicia sesión para revisar tus tareas pendientes y actualizar tu avance del día."
-                titleButton="Iniciar Sesión"
-                (toggleAuth)="toggleAuth()" />
-            }
-
+                <app-mobile-toggle [isRegister]="isRegister()" (toggleAuth)="toggleAuth()" />
             </div>
         </div>
+        <app-desktop-toggle [isRegister]="isRegister()" (toggleAuth)="toggleAuth()"/>
     </div>
 </div>

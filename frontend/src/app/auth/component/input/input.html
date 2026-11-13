@@ -1,0 +1,17 @@
+<div>
+    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-300">
+        {{ label() }}
+    </label>
+    
+    <input 
+        [type]="type()" 
+        [placeholder]="placeholder()" 
+        [formControl]="control()"
+        class="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-1.5 text-xs text-slate-100 placeholder-slate-500 shadow-sm transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+    
+    @if (errorMessage) { 
+        <div class="mt-1 block text-[10px] font-extralight tracking-wider text-red-500 animate-fade-in">
+            <span>{{ errorMessage }}</span>
+        </div>
+    }
+</div>

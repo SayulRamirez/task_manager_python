@@ -1,0 +1,53 @@
+<form [formGroup]="formRegister" (ngSubmit)="onSubmit()" class="space-y-4">
+    @if (step() === 1) {
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 animate-fade-in">
+            <app-input label="Nombre(s)" type="text" placeholder="Juan" [control]="$any(firstName)" />
+            <app-input label="Apellido Paterno" type="text" placeholder="Pérez" [control]="$any(lastName)" />
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 animate-fade-in">    
+            <app-input label="Apellido Materno" type="text" placeholder="Gómez" [control]="$any(maternalSurname)" />
+            <app-input label="Teléfono" type="tel" placeholder="5512345678" [control]="$any(phoneNumber)" />
+        </div>
+
+        <div class="pt-2 animate-fade-in">
+            <button type="button" (click)="nextStep()"
+                class="w-full rounded-lg border border-indigo-500/30 bg-indigo-600 px-5 py-2.5 text-xs font-semibold text-white shadow-md transition duration-200 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 active:scale-[0.98]">
+                Siguiente paso
+            </button>
+        </div>
+    }
+
+    @if (step() === 2) {
+        <div class="mt-4 rounded-xl border border-slate-800 bg-slate-950/60 p-3.5 animate-fade-in">
+            <span class="mb-3 block text-xs font-semibold text-indigo-400">
+                Credenciales de acceso
+            </span>
+
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <app-input label="Email" type="email" placeholder="juan.perez@example.com" [control]="$any(email)" />
+                <app-input label="Contraseña" type="password" placeholder="••••••••" [control]="$any(password)" />
+            </div>
+        </div>
+
+        <div class="pt-2 flex gap-3 animate-fade-in">
+            <button type="button" (click)="prevStep()" [disabled]="isLoading()"
+                class="w-1/3 rounded-lg border border-slate-700 bg-slate-800 px-5 py-2.5 text-xs font-semibold text-white shadow-md transition duration-200 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500/50 active:scale-[0.98]">
+                Atrás
+            </button>
+
+            <button type="submit" [disabled]="isLoading()"
+                class="w-2/3 rounded-lg border border-indigo-500/30 bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-md transition duration-200 hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 active:scale-[0.98]">
+                @if (isLoading()) {
+                    <span>Procesando...</span>
+                } @else {
+                    <span>Crear cuenta</span>
+                }
+            </button>
+        </div>
+    }
+
+    @if (message().show) {
+        <app-message-response [message]="message()" />
+    }
+</form>
